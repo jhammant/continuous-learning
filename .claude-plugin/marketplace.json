@@ -1,0 +1,14 @@
+{
+  "name": "continuous-learning",
+  "description": "Mentor layer for Claude Code: learn while you work, with a persistent per-concept learner model.",
+  "owner": {
+    "name": "jhammant"
+  },
+  "plugins": [
+    {
+      "name": "continuous-learning",
+      "source": "./",
+      "description": "Mentor layer for Claude Code: profiles your level from real work and teaches through targeted, optional interactions."
+    }
+  ]
+}

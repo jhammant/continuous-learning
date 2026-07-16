@@ -1,0 +1,407 @@
+<title>A Month of Learning, Reconstructed</title>
+<style>
+  :root{
+    --ground:#e9ece9; --panel:#f5f7f4; --panel-2:#eef1ed;
+    --ink:#15201e; --ink-soft:#33423f; --muted:#5c6c68; --faint:#8797922e;
+    --line:#d2d9d3; --grid:rgba(18,40,37,.07);
+    --accent:#0f8477; --accent-2:#1aa392; --do:#3f9a52; --learn:#bd7f1f;
+    --shadow:0 1px 0 rgba(20,40,37,.04), 0 8px 30px -18px rgba(20,50,45,.35);
+    --mono:ui-monospace,"SF Mono","JetBrains Mono","Cascadia Code",Menlo,Consolas,monospace;
+    --sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --ground:#0a1214; --panel:#0f191b; --panel-2:#121e20;
+      --ink:#e7efeb; --ink-soft:#c2cfca; --muted:#8ba09a; --faint:#8ba0951f;
+      --line:#20302f; --grid:rgba(120,190,178,.08);
+      --accent:#3fc0af; --accent-2:#6fd8c8; --do:#79c96b; --learn:#e0a740;
+      --shadow:0 1px 0 rgba(0,0,0,.3), 0 14px 40px -20px rgba(0,0,0,.7);
+    }
+  }
+  :root[data-theme="light"]{
+    --ground:#e9ece9; --panel:#f5f7f4; --panel-2:#eef1ed;
+    --ink:#15201e; --ink-soft:#33423f; --muted:#5c6c68; --faint:#8797922e;
+    --line:#d2d9d3; --grid:rgba(18,40,37,.07);
+    --accent:#0f8477; --accent-2:#1aa392; --do:#3f9a52; --learn:#bd7f1f;
+    --shadow:0 1px 0 rgba(20,40,37,.04), 0 8px 30px -18px rgba(20,50,45,.35);
+  }
+  :root[data-theme="dark"]{
+    --ground:#0a1214; --panel:#0f191b; --panel-2:#121e20;
+    --ink:#e7efeb; --ink-soft:#c2cfca; --muted:#8ba09a; --faint:#8ba0951f;
+    --line:#20302f; --grid:rgba(120,190,178,.08);
+    --accent:#3fc0af; --accent-2:#6fd8c8; --do:#79c96b; --learn:#e0a740;
+    --shadow:0 1px 0 rgba(0,0,0,.3), 0 14px 40px -20px rgba(0,0,0,.7);
+  }
+
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--ground); color:var(--ink);
+    font-family:var(--sans); line-height:1.6;
+    -webkit-font-smoothing:antialiased; font-feature-settings:"tnum" 0;
+  }
+  .wrap{max-width:1000px; margin:0 auto; padding:0 22px}
+  .prose{max-width:64ch}
+  h1,h2,h3,.mono,.eyebrow,.stat,.big,.axis,.chip,.tick,.legend{font-family:var(--mono)}
+  .tnum{font-variant-numeric:tabular-nums}
+
+  .eyebrow{
+    font-size:11.5px; letter-spacing:.22em; text-transform:uppercase;
+    color:var(--accent); font-weight:600; margin:0 0 14px;
+  }
+  .eyebrow::before{content:"› "; opacity:.6}
+
+  /* ---- hero ---- */
+  header.hero{padding:74px 0 34px; border-bottom:1px solid var(--line)}
+  h1{
+    font-size:clamp(30px,5.4vw,52px); line-height:1.04; letter-spacing:-.015em;
+    font-weight:640; margin:0 0 20px; text-wrap:balance;
+  }
+  h1 .em{color:var(--accent)}
+  .lede{font-size:clamp(16px,2.2vw,19px); color:var(--ink-soft); max-width:60ch; margin:0}
+  .lede b{color:var(--ink); font-weight:600}
+
+  .gauge{
+    display:flex; flex-wrap:wrap; align-items:stretch; gap:14px; margin-top:34px;
+  }
+  .gauge .ratio{
+    flex:1 1 260px; background:var(--panel); border:1px solid var(--line);
+    border-radius:14px; padding:20px 22px; box-shadow:var(--shadow);
+  }
+  .ratio .row{display:flex; align-items:baseline; gap:10px; margin-bottom:12px}
+  .ratio .num{font-family:var(--mono); font-size:40px; font-weight:640; letter-spacing:-.02em; line-height:1}
+  .ratio .num.do{color:var(--do)} .ratio .num.learn{color:var(--learn)}
+  .ratio .lbl{font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:.12em; font-family:var(--mono)}
+  .bar2{height:12px; border-radius:6px; overflow:hidden; display:flex; background:var(--panel-2); border:1px solid var(--line)}
+  .bar2 span{display:block; height:100%}
+  .bar2 .do{background:var(--do)} .bar2 .learn{background:var(--learn)}
+  .ratio .cap{font-size:12.5px; color:var(--muted); margin-top:12px; line-height:1.5}
+
+  .kpis{flex:1 1 300px; display:grid; grid-template-columns:repeat(2,1fr); gap:12px}
+  .kpi{background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:15px 16px; box-shadow:var(--shadow)}
+  .kpi .v{font-family:var(--mono); font-size:26px; font-weight:640; letter-spacing:-.01em; line-height:1}
+  .kpi .k{font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:.1em; margin-top:7px; font-family:var(--mono)}
+
+  /* ---- sections ---- */
+  section{padding:46px 0; border-bottom:1px solid var(--line)}
+  h2{font-size:clamp(19px,2.6vw,23px); font-weight:600; letter-spacing:-.01em; margin:0 0 8px}
+  .sub{color:var(--muted); font-size:14.5px; margin:0 0 26px; max-width:62ch}
+
+  .panel{background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:22px; box-shadow:var(--shadow)}
+  .scrollx{overflow-x:auto}
+
+  svg{display:block; width:100%; height:auto}
+  .grid-line{stroke:var(--grid); stroke-width:1}
+  .axis{fill:var(--muted); font-size:11px}
+  .tick{fill:var(--muted); font-size:10.5px}
+  .traj-line{fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round}
+  .traj-line.ctx{stroke:var(--muted); opacity:.34; stroke-width:1.5}
+  .traj-line.git{stroke:var(--accent)}
+  .traj-line.cicd{stroke:var(--accent-2)}
+  .traj-line.db{stroke:var(--learn); stroke-dasharray:1 0}
+  .endcap{r:3.4}
+  .endcap.git{fill:var(--accent)} .endcap.cicd{fill:var(--accent-2)} .endcap.db{fill:var(--learn)}
+  .endlbl{font-family:var(--mono); font-size:11px; font-weight:600}
+  .endlbl.git{fill:var(--accent)} .endlbl.cicd{fill:var(--accent-2)} .endlbl.db{fill:var(--learn)}
+  .endlbl.ctx{fill:var(--muted); font-weight:500; opacity:.75}
+
+  .legend{display:flex; flex-wrap:wrap; gap:16px; margin-top:16px; font-size:12px; color:var(--muted)}
+  .legend span{display:inline-flex; align-items:center; gap:7px}
+  .legend i{width:16px; height:3px; border-radius:2px; display:inline-block}
+
+  /* weekly bars */
+  .weeks{display:flex; align-items:flex-end; gap:min(4vw,34px); height:230px; padding:0 4px}
+  .wk{flex:1; display:flex; flex-direction:column; align-items:center; gap:0; height:100%; justify-content:flex-end}
+  .wk .stack{width:100%; max-width:64px; display:flex; flex-direction:column; justify-content:flex-end; border-radius:7px 7px 0 0; overflow:hidden; border:1px solid var(--line); border-bottom:none}
+  .wk .seg{width:100%; transition:height .9s cubic-bezier(.2,.7,.2,1)}
+  .wk .seg.do{background:var(--do)} .wk .seg.learn{background:var(--learn)}
+  .wk .tot{font-family:var(--mono); font-size:13px; font-weight:640; margin-bottom:7px}
+  .wk .wl{font-family:var(--mono); font-size:11px; color:var(--muted); margin-top:9px; text-align:center; line-height:1.3}
+
+  /* standing ranking */
+  .rank{display:flex; flex-direction:column; gap:9px}
+  .rrow{display:grid; grid-template-columns:130px 1fr 88px; align-items:center; gap:14px}
+  .rrow .rn{font-family:var(--mono); font-size:12.5px; color:var(--ink-soft); text-align:right; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+  .track{height:22px; background:var(--panel-2); border:1px solid var(--line); border-radius:6px; overflow:hidden; position:relative}
+  .fill{height:100%; border-radius:5px 0 0 5px; width:0; transition:width 1.1s cubic-bezier(.2,.7,.2,1)}
+  .fill.strong{background:linear-gradient(90deg,var(--accent),var(--accent-2))}
+  .fill.mid{background:var(--accent); opacity:.62}
+  .fill.edge{background:var(--learn)}
+  .rrow .meta{font-family:var(--mono); font-size:12px; color:var(--muted); text-align:right}
+  .rrow .meta b{color:var(--ink); font-weight:640}
+  .edgeflag{color:var(--learn); font-size:11px; letter-spacing:.04em}
+
+  /* signature skills chips */
+  .sig{display:flex; flex-wrap:wrap; gap:10px}
+  .sigchip{background:var(--panel-2); border:1px solid var(--line); border-radius:10px; padding:11px 14px; display:flex; flex-direction:column; gap:3px; min-width:140px}
+  .sigchip .sn{font-size:13px; font-weight:600; color:var(--ink)}
+  .sigchip .sm{font-family:var(--mono); font-size:11.5px; color:var(--muted)}
+  .sigchip .sm b{color:var(--accent)}
+
+  /* outcomes + repos */
+  .cols{display:grid; grid-template-columns:1fr 1fr; gap:20px}
+  .repos{display:flex; flex-direction:column; gap:10px}
+  .repo{display:grid; grid-template-columns:1fr auto; gap:10px; align-items:center}
+  .repo .rname{font-family:var(--mono); font-size:12.5px; color:var(--ink-soft); overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+  .repo .rbar{height:8px; background:var(--panel-2); border-radius:4px; overflow:hidden; grid-column:1/3}
+  .repo .rbar i{display:block; height:100%; background:var(--accent); width:0; transition:width 1s ease}
+  .repo .rv{font-family:var(--mono); font-size:12.5px; font-weight:640; color:var(--accent)}
+
+  /* goals */
+  .goals{display:flex; flex-direction:column; gap:11px}
+  .goal{display:flex; gap:13px; align-items:flex-start; padding:13px 15px; background:var(--panel); border:1px solid var(--line); border-radius:11px}
+  .goal .gt{font-family:var(--mono); font-size:10px; text-transform:uppercase; letter-spacing:.09em; padding:3px 8px; border-radius:20px; white-space:nowrap; margin-top:2px}
+  .gt.skill{background:color-mix(in srgb,var(--accent) 16%,transparent); color:var(--accent)}
+  .gt.project{background:color-mix(in srgb,var(--do) 16%,transparent); color:var(--do)}
+  .gt.habit{background:color-mix(in srgb,var(--learn) 18%,transparent); color:var(--learn)}
+  .gt.direction{background:var(--panel-2); color:var(--muted)}
+  .goal .gtext{font-size:14px; color:var(--ink-soft)}
+
+  footer{padding:40px 0 64px}
+  .method{color:var(--muted); font-size:13px; line-height:1.7; max-width:66ch}
+  .method b{color:var(--ink-soft)}
+  .sig-off{margin-top:26px; font-family:var(--mono); font-size:12px; color:var(--muted); display:flex; align-items:center; gap:9px}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 22%,transparent)}
+
+  .reveal{opacity:0; transform:translateY(14px); transition:opacity .7s ease, transform .7s cubic-bezier(.2,.7,.2,1)}
+  .reveal.in{opacity:1; transform:none}
+
+  @media (max-width:640px){
+    .rrow{grid-template-columns:104px 1fr 74px; gap:9px}
+    .cols{grid-template-columns:1fr}
+    .kpis{grid-template-columns:repeat(2,1fr)}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .reveal{opacity:1; transform:none; transition:none}
+    *{transition:none !important; animation:none !important}
+  }
+</style>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Skill telemetry · reconstructed from Claude Code sessions</p>
+    <h1>%%VERDICT_TITLE%%</h1>
+    <p class="lede">%%VERDICT_LEDE%%</p>
+
+    <div class="gauge">
+      <div class="ratio reveal">
+        <div class="row">
+          <span class="num do tnum" data-count="%%DO%%">0</span>
+          <span class="lbl">doing / fluent</span>
+        </div>
+        <div class="bar2" aria-hidden="true"><span class="do" style="width:%%DO_PCT%%%"></span><span class="learn" style="width:%%LEARN_PCT%%%"></span></div>
+        <div class="row" style="margin-top:12px">
+          <span class="num learn tnum" data-count="%%LEARN%%">0</span>
+          <span class="lbl">learning / taught</span>
+        </div>
+        <p class="cap">Every session, the extractor tags whether you <em>used</em> a concept fluently or <em>needed</em> it explained. %%FLUENCY_PCT%%% doing is the signal that the teaching is landing.</p>
+      </div>
+      <div class="kpis">
+        <div class="kpi reveal"><div class="v tnum" data-count="%%CONCEPTS%%">0</div><div class="k">skills tracked</div></div>
+        <div class="kpi reveal"><div class="v tnum" data-count="%%AREAS%%">0</div><div class="k">domains touched</div></div>
+        <div class="kpi reveal"><div class="v tnum" data-count="%%SESSIONS%%">0</div><div class="k">sessions mined</div></div>
+        <div class="kpi reveal"><div class="v tnum" data-count="%%STARS%%">0</div><div class="k">★ shipped work</div></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <h2>The trajectory</h2>
+    <p class="sub">What the mentor <em>would have</em> tracked, replayed chronologically from every logged event. Most domains climb as fluency accrues. Databases dips — the honest signal that you were taught there more than you showed it.</p>
+    <div class="panel reveal scrollx">
+      <svg id="traj" viewBox="0 0 760 380" role="img" aria-label="Skill rating trajectory by domain over five weeks"></svg>
+      <div class="legend">
+        <span><i style="background:var(--accent)"></i>Git — the steady riser</span>
+        <span><i style="background:var(--accent-2)"></i>CI/CD &amp; Deploy</span>
+        <span><i style="background:var(--learn)"></i>Databases — dipped, needs hands-on</span>
+        <span><i style="background:var(--muted);opacity:.5"></i>AI · Security · Product (context)</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>From taught to doing</h2>
+    <p class="sub">Weekly volume, split by mode. The most recent week reads %%LW_DO%% fluent moments against %%LW_LEARN%% taught. Low-volume weeks are real gaps in activity, not missing data.</p>
+    <div class="panel reveal">
+      <div class="weeks" id="weeks" aria-label="Weekly learning versus doing"></div>
+      <div class="legend" style="justify-content:center">
+        <span><i style="background:var(--do)"></i>Doing — used fluently, hands-on, correct prediction</span>
+        <span><i style="background:var(--learn)"></i>Learning — taught, asked, struggled</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Where you stand now</h2>
+    <p class="sub">Every domain, ranked by reconstructed rating (0–5). The amber bars are the growth edges — where the AI is still carrying you, and where a little deliberate practice pays most.</p>
+    <div class="panel reveal">
+      <div class="rank" id="rank"></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Signature skills</h2>
+    <p class="sub">The concepts you demonstrated most fluently, most often — your backbone. Process and judgment, not any single tool, sit at the top.</p>
+    <div class="sig reveal" id="sig"></div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>What it's producing</h2>
+    <p class="sub">Skill is the input; this is the output. Outcome metrics close the loop so goals like "grow audience" get a real number, not a vibe.</p>
+    <div class="cols">
+      <div class="panel reveal">
+        <div style="display:flex;gap:22px;flex-wrap:wrap;margin-bottom:6px">
+          <div><div class="kpi" style="border:none;box-shadow:none;padding:0;background:none"><div class="v tnum" style="color:var(--accent);font-size:34px" data-count="%%STARS%%">0</div><div class="k">total GitHub stars</div></div></div>
+          <div><div class="kpi" style="border:none;box-shadow:none;padding:0;background:none"><div class="v tnum" style="font-size:34px" data-count="%%FORKS%%">0</div><div class="k">forks</div></div></div>
+          <div><div class="kpi" style="border:none;box-shadow:none;padding:0;background:none"><div class="v tnum" style="font-size:34px" data-count="%%REPOS_TRACTION%%">0</div><div class="k">repos with traction</div></div></div>
+        </div>
+      </div>
+      <div class="panel reveal">
+        <div class="repos" id="repos"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>The direction</h2>
+    <p class="sub">Six goals steer the mentor now. Each session opens with these, and an alignment check scores whether real work is heading toward them — turning "am I doing the right thing?" into a number.</p>
+    <div class="goals reveal" id="goals"></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p class="eyebrow">Method &amp; honesty</p>
+    <p class="method">Built from <b>%%EVENTS%% learning events</b> across <b>%%SESSIONS%% Claude Code sessions</b> (%%SPAN%%). Each event was extracted locally from a session transcript, then ratings were <b>replayed in chronological order</b> — so the trajectory is a faithful reconstruction of what a live mentor would have recorded, not a re-drawn guess. Week-to-week is noisy where volume is low; the robust signals are the <b>overall %%FLUENCY_PCT%% fluency</b> and the <b>current standing</b>. All data lives on the machine in <b>~/.continuous-learning/</b> — nothing left it but the extraction call, which can run on a local model instead.</p>
+    <div class="sig-off"><span class="dot"></span>continuous-learning · a mentor layer that learns you from your own work</div>
+  </div>
+</footer>
+
+<script>
+const DATA = %%DATA%%;
+
+const reduce = matchMedia("(prefers-reduced-motion:reduce)").matches;
+const svgNS="http://www.w3.org/2000/svg";
+const el=(n,a={})=>{const e=document.createElementNS(svgNS,n);for(const k in a)e.setAttribute(k,a[k]);return e;};
+
+// ---- trajectory ----
+(function(){
+  const svg=document.getElementById("traj");
+  const W=760,H=380,P={l:34,r:112,t:18,b:36}, iw=W-P.l-P.r, ih=H-P.t-P.b;
+  const wk=DATA.trajectory.weeks, n=wk.length;
+  const x=i=>P.l+(iw*i/(n-1)), y=r=>P.t+ih*(1-r/5);
+  for(let g=0;g<=5;g++){const gy=y(g);
+    svg.appendChild(el("line",{class:"grid-line",x1:P.l,y1:gy,x2:P.l+iw,y2:gy}));
+    const t=el("text",{class:"tick",x:P.l-8,y:gy+3.5,"text-anchor":"end"});t.textContent=g;svg.appendChild(t);}
+  wk.forEach((w,i)=>{const t=el("text",{class:"axis",x:x(i),y:H-12,"text-anchor":"middle"});t.textContent=w;svg.appendChild(t);});
+  // context first, then emphasised on top
+  const order=[...DATA.trajectory.series].sort((a,b)=>a.emph-b.emph);
+  order.forEach((s,si)=>{
+    const d=s.pts.map((r,i)=>`${i?"L":"M"}${x(i).toFixed(1)} ${y(r).toFixed(1)}`).join(" ");
+    const path=el("path",{class:"traj-line "+s.cls,d});
+    svg.appendChild(path);
+    if(!reduce){const L=path.getTotalLength();path.style.strokeDasharray=L;path.style.strokeDashoffset=L;
+      path.style.transition="stroke-dashoffset 1.15s ease "+(0.12*si)+"s";
+      requestAnimationFrame(()=>{path.getBoundingClientRect();path.style.strokeDashoffset=0;});}
+    const lr=s.pts[n-1];
+    if(s.emph)svg.appendChild(el("circle",{class:"endcap "+s.cls,cx:x(n-1),cy:y(lr)}));
+    const lbl=el("text",{class:"endlbl "+(s.emph?s.cls:"ctx"),x:x(n-1)+9,y:y(lr)+3.6});
+    lbl.textContent=`${s.name} ${lr.toFixed(1)}`;svg.appendChild(lbl);
+  });
+})();
+
+// ---- weekly ----
+(function(){
+  const host=document.getElementById("weeks"), max=Math.max(...DATA.weekly.map(d=>d.t));
+  DATA.weekly.forEach(d=>{
+    const col=document.createElement("div");col.className="wk";
+    const h=Math.round(100*d.t/max);
+    col.innerHTML=`<div class="tot tnum">${d.t}</div>
+      <div class="stack" style="height:${h}%">
+        <div class="seg do" data-h="${d.t?100*d.do/d.t:0}" style="height:0%"></div>
+        <div class="seg learn" data-h="${d.t?100*d.learn/d.t:0}" style="height:0%"></div>
+      </div><div class="wl">${d.w}<br>${d.do}·${d.learn}</div>`;
+    host.appendChild(col);
+  });
+})();
+
+// ---- standing ----
+(function(){
+  const host=document.getElementById("rank");
+  DATA.standing.forEach(([name,r,ev])=>{
+    const band=r>=3.5?"strong":r>=2.5?"mid":"edge";
+    const row=document.createElement("div");row.className="rrow";
+    row.innerHTML=`<div class="rn" title="${name}">${name}</div>
+      <div class="track"><div class="fill ${band}" data-w="${r/5*100}"></div></div>
+      <div class="meta"><b class="tnum">${r.toFixed(1)}</b> · ${ev}${band==="edge"?' <span class="edgeflag">◂ edge</span>':''}</div>`;
+    host.appendChild(row);
+  });
+})();
+
+// ---- signature ----
+(function(){
+  const host=document.getElementById("sig");
+  DATA.sig.forEach(([name,r,ev])=>{
+    const c=document.createElement("div");c.className="sigchip";
+    c.innerHTML=`<div class="sn">${name}</div><div class="sm"><b class="tnum">${r.toFixed(1)}</b> / 5 · ${ev} signals</div>`;
+    host.appendChild(c);
+  });
+})();
+
+// ---- repos ----
+(function(){
+  const host=document.getElementById("repos"), max=DATA.repos[0][1];
+  DATA.repos.forEach(([name,s])=>{
+    const r=document.createElement("div");r.className="repo";
+    r.innerHTML=`<div class="rname">${name}</div><div class="rv tnum">${s}★</div>
+      <div class="rbar"><i data-w="${s/max*100}"></i></div>`;
+    host.appendChild(r);
+  });
+})();
+
+// ---- goals ----
+(function(){
+  const host=document.getElementById("goals");
+  DATA.goals.forEach(([type,text])=>{
+    const g=document.createElement("div");g.className="goal";
+    g.innerHTML=`<span class="gt ${type}">${type}</span><span class="gtext">${text}</span>`;
+    host.appendChild(g);
+  });
+})();
+
+// ---- reveal + count-up + bar fills ----
+function animateBars(root){
+  root.querySelectorAll(".fill[data-w],.rbar i[data-w]").forEach(b=>{b.style.width=b.dataset.w+"%";});
+  root.querySelectorAll(".wk .seg[data-h]").forEach(s=>{s.style.height=s.dataset.h+"%";});
+}
+function countUp(node){
+  const target=+node.dataset.count; if(reduce){node.textContent=target;return;}
+  const dur=900, t0=performance.now();
+  (function tick(t){const p=Math.min(1,(t-t0)/dur);const e=1-Math.pow(1-p,3);
+    node.textContent=Math.round(target*e); if(p<1)requestAnimationFrame(tick);})(t0);
+}
+const io=new IntersectionObserver((ents)=>{
+  ents.forEach(en=>{if(!en.isIntersecting)return;
+    en.target.classList.add("in");
+    en.target.querySelectorAll("[data-count]").forEach(countUp);
+    if(en.target.querySelector("[data-w],[data-h]")||en.target.matches(".panel"))
+      setTimeout(()=>animateBars(en.target),120);
+    io.unobserve(en.target);
+  });
+},{threshold:.2});
+document.querySelectorAll(".reveal").forEach(n=>io.observe(n));
+// hero counts fire immediately
+document.querySelectorAll(".hero [data-count]").forEach(countUp);
+if(reduce){document.querySelectorAll(".reveal").forEach(n=>n.classList.add("in"));document.querySelectorAll(".panel").forEach(animateBars);}
+</script>

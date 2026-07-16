@@ -1,0 +1,8 @@
+{
+  "name": "continuous-learning",
+  "description": "A mentor layer for Claude Code: learns your per-concept level from real work, teaches through targeted optional interactions, and closes the loop with spaced-repetition recall.",
+  "version": "0.1.0",
+  "author": {
+    "name": "jhammant"
+  }
+}

@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.DS_Store
+# never commit anyone's learner data or rendered journeys
+*.journey.html
+journey.html
+/.continuous-learning/

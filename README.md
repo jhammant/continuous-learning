@@ -105,6 +105,7 @@ CL_EXTRACT_CMD="ollama run qwen2.5-coder:32b" scripts/backfill.sh
 | `/continuous-learning:goals` | Set goals and check your work is heading toward them |
 | `/continuous-learning:metrics` | Track outcomes (GitHub stars, revenue, social) |
 | `/continuous-learning:capture-study` | Log what you learned *outside* Claude |
+| `/continuous-learning:dashboard` | Open the live dashboard + in-browser recall in your browser |
 
 Modes: **quiet** observes and logs but never interjects; **active** (default) adds
 calibrated asides and optional checks; **coach** additionally leaves small safe
@@ -119,7 +120,7 @@ script it):
 |---|---|
 | A **written report** — what you touched, where you wobbled, one suggested exercise | `/continuous-learning:digest 7` (days) |
 | A **visual report** of your whole journey (shareable HTML) | `/continuous-learning:journey` |
-| A **live dashboard** + in-browser recall | `python3 scripts/cl.py serve --open` |
+| A **live dashboard** + in-browser recall | `/continuous-learning:dashboard` |
 | **Are you on track?** alignment of real work vs. stated goals | `/continuous-learning:goals check` |
 | **Outcome trends** — stars/revenue over time | `/continuous-learning:metrics report` |
 | **Raw JSON** to pipe into your own tooling | `python3 scripts/cl.py stats --days 30` |

@@ -1036,9 +1036,25 @@ load();
 
 def cmd_serve(args):
     import http.server
+    import signal
     import socketserver
     import subprocess
     import tempfile
+
+    ensure_home()
+    pidfile = path("serve.pid")
+    url = f"http://127.0.0.1:{args.port}/"
+
+    if args.stop:
+        try:
+            with open(pidfile) as f:
+                pid = int(f.read().strip())
+            os.kill(pid, signal.SIGTERM)
+            os.remove(pidfile)
+            print(f"stopped dashboard (pid {pid})")
+        except (OSError, ValueError):
+            print("no running dashboard found")
+        return
 
     scripts_dir = os.path.dirname(SCRIPT)
     today_iso = today().isoformat()
@@ -1119,11 +1135,23 @@ def cmd_serve(args):
         daemon_threads = True
         allow_reuse_address = True
 
-    httpd = Server(("127.0.0.1", args.port), H)
-    url = f"http://127.0.0.1:{args.port}/"
+    try:
+        httpd = Server(("127.0.0.1", args.port), H)
+    except OSError:
+        print(f"dashboard already running → {url}")
+        if args.open:
+            try:
+                import webbrowser
+                webbrowser.open(url)
+            except Exception:
+                pass
+        return
+
+    with open(pidfile, "w") as f:
+        f.write(str(os.getpid()))
     print(f"continuous-learning dashboard → {url}")
     print(f"  recall quiz → {url}recall")
-    print("local only (127.0.0.1), no auth. Ctrl-C to stop.")
+    print(f"local only (127.0.0.1), no auth. Stop with: cl.py serve --stop")
     if args.open:
         try:
             import webbrowser
@@ -1134,6 +1162,11 @@ def cmd_serve(args):
         httpd.serve_forever()
     except KeyboardInterrupt:
         print("\nstopped.")
+    finally:
+        try:
+            os.remove(pidfile)
+        except OSError:
+            pass
 
 
 def cmd_seed(args):
@@ -1272,6 +1305,7 @@ def main():
     s = sub.add_parser("serve")
     s.add_argument("--port", type=int, default=8787)
     s.add_argument("--open", action="store_true")
+    s.add_argument("--stop", action="store_true", help="stop a backgrounded dashboard")
     s.set_defaults(fn=cmd_serve)
 
     sub.add_parser("seed").set_defaults(fn=cmd_seed)
